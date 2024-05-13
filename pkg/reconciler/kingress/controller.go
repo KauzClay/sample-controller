@@ -18,6 +18,7 @@ package kingress
 
 import (
 	"context"
+	"fmt"
 
 	contourclient "knative.dev/net-contour/pkg/client/injection/client"
 	proxyinformer "knative.dev/net-contour/pkg/client/injection/informers/projectcontour/v1/httpproxy"
@@ -26,7 +27,7 @@ import (
 	kingressreconciler "knative.dev/networking/pkg/client/injection/reconciler/networking/v1alpha1/ingress"
 	inginformer "knative.dev/pkg/client/injection/kube/informers/networking/v1/ingress"
 
-	//hostruleinformer "github.com/load-balancer-and-ingress-services-for-kubernetes/pkg/client/v1beta1/informers/externalversions/ako/v1beta1"
+	aviv1beta1 "github.com/load-balancer-and-ingress-services-for-kubernetes/pkg/apis/ako/v1beta1"
 
 	"knative.dev/net-contour/pkg/reconciler/contour/config"
 	"knative.dev/networking/pkg/apis/networking"
@@ -51,6 +52,8 @@ func NewController(
 	proxyInformer := proxyinformer.Get(ctx)
 	ingInformer := inginformer.Get(ctx)
 	//hostRuleInformer := hostruleinformer.Informer
+
+	fmt.Println(aviv1beta1.SchemeGroupVersion)
 
 	c := &Reconciler{
 		kingressClient: kingressclient.Get(ctx),
