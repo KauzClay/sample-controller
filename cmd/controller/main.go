@@ -19,6 +19,7 @@ package main
 import (
 	// The set of controllers this controller process runs.
 	"knative.dev/sample-controller/pkg/reconciler/addressableservice"
+	"knative.dev/sample-controller/pkg/reconciler/kingress"
 	"knative.dev/sample-controller/pkg/reconciler/simpledeployment"
 
 	// This defines the shared main for injected controllers.
@@ -29,5 +30,6 @@ func main() {
 	sharedmain.Main("controller",
 		addressableservice.NewController,
 		simpledeployment.NewController,
+		kingress.NewController,
 	)
 }

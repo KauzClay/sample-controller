@@ -27,36 +27,23 @@ function run_yq() {
 
 echo "=== Update Codegen for ${MODULE_NAME}"
 
-group "Kubernetes Codegen"
-
-# generate the code with:
-# --output-base    because this script should also be able to run inside the vendor dir of
-#                  k8s.io/kubernetes. The output-base is needed for the generators to output into the vendor dir
-#                  instead of the $GOPATH directly. For normal projects this can be dropped.
-${CODEGEN_PKG}/generate-groups.sh "deepcopy,client,informer,lister" \
-  knative.dev/sample-controller/pkg/client knative.dev/sample-controller/pkg/apis \
-  "samples:v1alpha1" \
+${CODEGEN_PKG}/generate-groups.sh "client,informer,lister" \
+  knative.dev/sample-controller/pkg/avi \
+  github.com/vmware/load-balancer-and-ingress-services-for-kubernetes/pkg/apis \
+  "ako:v1beta1" \
   --go-header-file ${REPO_ROOT_DIR}/hack/boilerplate/boilerplate.go.txt
 
 group "Knative Codegen"
 
 # Knative Injection
+OUTPUT_PKG="knative.dev/sample-controller/pkg/avi/injection" \
 ${KNATIVE_CODEGEN_PKG}/hack/generate-knative.sh "injection" \
-  knative.dev/sample-controller/pkg/client knative.dev/sample-controller/pkg/apis \
-  "samples:v1alpha1" \
+  github.com/vmware/load-balancer-and-ingress-services-for-kubernetes/pkg/client/v1beta1 \
+  github.com/vmware/load-balancer-and-ingress-services-for-kubernetes/pkg/apis \
+  "ako:v1beta1" \
   --go-header-file ${REPO_ROOT_DIR}/hack/boilerplate/boilerplate.go.txt
 
-group "Update CRD Schema"
-
-go run $(dirname $0)/../cmd/schema/ dump SimpleDeployment \
-  | run_yq eval-all --header-preprocess=false --inplace 'select(fileIndex == 0).spec.versions[0].schema.openAPIV3Schema = select(fileIndex == 1) | select(fileIndex == 0)' \
-  $(dirname $0)/../config/300-simpledeployment.yaml -
-
-go run $(dirname $0)/../cmd/schema/ dump AddressableService \
-  | run_yq eval-all --header-preprocess=false --inplace 'select(fileIndex == 0).spec.versions[0].schema.openAPIV3Schema = select(fileIndex == 1) | select(fileIndex == 0)' \
-  $(dirname $0)/../config/300-addressableservice.yaml -
-
-group "Update deps post-codegen"
+# group "Update deps post-codegen"
 
 # Make sure our dependencies are up-to-date
-${REPO_ROOT_DIR}/hack/update-deps.sh
+# ${REPO_ROOT_DIR}/hack/update-deps.sh
