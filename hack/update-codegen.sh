@@ -31,7 +31,8 @@ ${CODEGEN_PKG}/generate-groups.sh "client,informer,lister" \
   knative.dev/sample-controller/pkg/avi \
   github.com/vmware/load-balancer-and-ingress-services-for-kubernetes/pkg/apis \
   "ako:v1beta1" \
-  --go-header-file ${REPO_ROOT_DIR}/hack/boilerplate/boilerplate.go.txt
+  --go-header-file ${REPO_ROOT_DIR}/hack/boilerplate/boilerplate.go.txt \
+  -v 10
 
 group "Knative Codegen"
 
@@ -41,7 +42,8 @@ ${KNATIVE_CODEGEN_PKG}/hack/generate-knative.sh "injection" \
   github.com/vmware/load-balancer-and-ingress-services-for-kubernetes/pkg/client/v1beta1 \
   github.com/vmware/load-balancer-and-ingress-services-for-kubernetes/pkg/apis \
   "ako:v1beta1" \
-  --go-header-file ${REPO_ROOT_DIR}/hack/boilerplate/boilerplate.go.txt
+  --go-header-file ${REPO_ROOT_DIR}/hack/boilerplate/boilerplate.go.txt \
+  -v 10
 
 # group "Update deps post-codegen"
 
